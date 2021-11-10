@@ -141,6 +141,16 @@ usersRouter.put("/:userId/purchaseHistory/:productId", async (req, res, next) =>
 
 usersRouter.delete("/:userId/purchaseHistory/:productId", async (req, res, next) => {
   try {
+    const modifiedUser = await UserModel.findByIdAndUpdate(
+      req.params.userId, // WHO
+      { $pull: { purchaseHistory: { _id: req.params.productId } } }, // HOW we want to modify the user (remove a specified item from the purchaseHistory array)
+      { new: true } // OPTIONS
+    )
+    if (modifiedUser) {
+      res.send(modifiedUser)
+    } else {
+      next(createHttpError(404, `User with id ${req.params.userId} not found!`))
+    }
   } catch (error) {
     next(error)
   }
