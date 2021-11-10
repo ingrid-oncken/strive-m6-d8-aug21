@@ -10,6 +10,15 @@ const userSchema = new Schema(
     dateOfBirth: { type: Date },
     age: { type: Number, min: 18, max: 65, required: true },
     professions: [String],
+    purchaseHistory: [
+      {
+        asin: { type: String },
+        title: { type: String },
+        price: { type: Number },
+        category: { type: String },
+        purchaseDate: { type: Date },
+      },
+    ],
   },
   {
     timestamps: true, // adds and manage createdAt and updatedAt fields
