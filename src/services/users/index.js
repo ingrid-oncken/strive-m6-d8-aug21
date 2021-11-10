@@ -134,6 +134,28 @@ usersRouter.get("/:userId/purchaseHistory/:productId", async (req, res, next) =>
 
 usersRouter.put("/:userId/purchaseHistory/:productId", async (req, res, next) => {
   try {
+    const user = await UserModel.findById(req.params.userId) // user is a MONGOOSE DOCUMENT, it is not a PLAIN JS OBJECT
+
+    if (user) {
+      const index = user.purchaseHistory.findIndex(p => p._id.toString() === req.params.productId)
+
+      if (index !== -1) {
+        user.purchaseHistory[index] = { ...user.purchaseHistory[index].toObject(), ...req.body }
+        await user.save()
+        res.send(user)
+      } else {
+        next(createHttpError(404, `Book with id ${req.params.productId} not found!`))
+      }
+    } else {
+      next(createHttpError(404, `User with id ${req.params.userId} not found!`))
+    }
+
+    // const user = await UserModel.findOneAndUpdate(
+    //   { _id: req.params.userId, "purchaseHistory._id": req.params.productId },
+    //   {
+    //     "purchaseHistory.$": req.body, // purchaseHistory[index] in js is equal to purchaseHistory.$ in mongo, N.B. req.body should contain all the properties of the product
+    //   }
+    // )
   } catch (error) {
     next(error)
   }
