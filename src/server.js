@@ -5,6 +5,7 @@ import cors from "cors"
 import { notFoundHandler, badRequestHandler, genericErrorHandler } from "./errorHandlers.js"
 
 import usersRouter from "./services/users/index.js"
+import booksRouter from "./services/books/index.js"
 
 const server = express()
 
@@ -18,6 +19,7 @@ server.use(express.json())
 // ********************************* ROUTES ********************************************
 
 server.use("/users", usersRouter)
+server.use("/books", booksRouter)
 
 // ********************************* ERROR HANDLERS ************************************
 
